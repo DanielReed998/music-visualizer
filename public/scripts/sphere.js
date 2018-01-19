@@ -8,10 +8,11 @@ class Sphere {
         this.y = y;
         // this.changeX = changeX;
         // this.changeY = changeY;
-        this.velocity = 0.05;
+        this.velocity = Math.random() * .05;
         this.radians = Math.random() * Math.PI * 2;
+        this.distance = Math.random() * 100 + 200
 
-        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.color = [25, (155*Math.random() + 100), (155*Math.random() + 100)];
         this.whichWay;
     }
 
@@ -26,23 +27,20 @@ class Sphere {
         translate(this.x + mouseX - 500, this.y + mouseY - 500)
         fill(this.color);
         pointLight(250, 250, 250, 0, 0, 1000);
-        sphere(20);
+        // stroke(255);
+
+        sphere(10);
         translate(-(this.x + mouseX - 500), -(this.y + mouseY - 500))
     }
 
     update(pulse) {
-        this.radians += this.velocity;
-        this.y = Math.cos(this.radians) * 300;
-        this.x = Math.sin(this.radians) * 300;
-        this.pulse(pulse);
-        // if (mouseX-500 > this.x + 10) this.changeX = 10;
-        // else if (mouseX - 500 < this.x - 10) this.changeX = -10;
-        // else this.changeX = 0;
-
-        // if (mouseY-500 > this.y + 10) this.changeY = 10;
-        // else if (mouseY-500 < this.y - 10) this.changeY = -10;
-        // else this.changeY = 0;
-
+        var extraSpeed = 0;
+        if (mouseIsPressed) extraSpeed = 0.05;
+        else extraSpeed = 0;
+        this.radians += this.velocity + extraSpeed;
+        this.y = Math.sin(this.radians) * this.distance;
+        this.x = Math.cos(this.radians) * this.distance;
+        // this.pulse(pulse);
         this.display();
     }
 
