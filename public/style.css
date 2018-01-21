@@ -23,3 +23,15 @@ form div {
 .nav {
     position: fixed;
 }
+
+nav {
+    display: flex;
+}
+
+div.ui.toggle.checkbox {
+    margin-right: 50px;
+}
+
+.nav-function {
+    margin-left: 20px;
+}

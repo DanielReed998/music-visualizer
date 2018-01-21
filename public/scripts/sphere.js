@@ -1,14 +1,20 @@
 
+const circleFunctions = {
+    cos: value => Math.cos(value),
+    sin: value => Math.sin(value),
+    tan: value => Math.tan(value)
+}
 
 class Sphere {
-	constructor(x, y, xVelocity, yVelocity) {
-        this.location = new p5.Vector(x+500,y+500)
+	constructor(x, y, z, xVelocity, yVelocity, zVelocity) {
+        this.location = new p5.Vector(x+500,y+500, z)
         // this.velocity = new p5.Vector(xVelocity, yVelocity);
-        this.velocity = new p5.Vector(Math.random() * 6 - 3, Math.random() * 6 - 3)
+        this.velocity = new p5.Vector(Math.random() * 6 - 3, Math.random() * 6 - 3, Math.random() * 6 - 3)
         this.spinVelocity = Math.random() * 0.05
         this.radians = Math.random() * Math.PI * 2;
         this.distanceX = Math.random() * 250 + 75
         this.distanceY = Math.random() * 250 + 75
+        this.distanceZ = Math.random() * 250 + 75
         
         this.radius = 5 + Math.random()*10;
         this.lastMouse = {x: this.location.x, y: this.location.y};
@@ -30,20 +36,21 @@ class Sphere {
         this.display();
     }
 
-    spin(centerX, centerY) {
+    spin(centerX, centerY, centerZ, xFunc, yFunc, zFunc) {
 
         //click event to boost the speed
-        var extraSpeed;
-        if (mouseIsPressed) extraSpeed = 0.05 * Math.sign(this.spinVelocity);
-        else extraSpeed = 0;
+        var extraSpeed = 0;
+        // if (mouseIsPressed) extraSpeed = 0.05 * Math.sign(this.spinVelocity);
+        // else extraSpeed = 0;
         
         //create motion
         this.radians += this.spinVelocity + extraSpeed;
         
         //updating based on new radians
-        this.location.x = centerX + Math.cos(this.radians) * this.distanceX;
-        this.location.y = centerY + Math.sin(this.radians) * this.distanceY;
-        // this.pulse(pulse);
+        this.location.x = centerX + xFunc(this.radians) * this.distanceX;
+        this.location.y = centerY + yFunc(this.radians) * this.distanceY;
+        this.location.z = centerZ + zFunc(this.radians) * this.distanceZ;
+        this.pulse();
         
         //add ropes
         // this.rope = new Rope(mouseX, mouseY, this.location.x, this.location.y, 20)
@@ -77,6 +84,10 @@ class Sphere {
             this.velocity.y = this.velocity.y * -1
             this.spinVelocity = this.spinVelocity * -1
         }
+        if (this.location.z > 250 - this.radius * 2 || this.location.z < 1000 + this.radius * 2) {
+            this.velocity.z = this.velocity.z * -1
+            this.spinVelocity = this.spinVelocity * -1
+        }
     }
     
     collide() {
@@ -105,16 +116,16 @@ class Sphere {
         fill(this.color);
         pointLight(250, 250, 250, 0, 0, 1000);
         // pointLight(250, 250, 250, mouseX-500, mouseY-500, 0);
-        translate(this.location.x - 500, this.location.y - 500)
+        translate(this.location.x - 500, this.location.y - 500, this.location.z)
         sphere(this.radius);
-        translate(-(this.location.x - 500), -(this.location.y - 500))
+        translate(-(this.location.x - 500), -(this.location.y - 500), -this.location.z)
     }
 }
 
 class BlackHole extends Sphere {
     constructor() {
-        super(0, 0);
-        this.velocity = new p5.Vector(Math.random() * 1 - 0.5, Math.random() * 1 - 0.5);
+        super(0, 0, 0);
+        this.velocity = new p5.Vector(Math.random() * 1 - 0.5, Math.random() * 1 - 0.5, 0);
         this.radius = 50;
         this.color = 25;
     }
@@ -126,16 +137,16 @@ class BlackHole extends Sphere {
         this.display();
     }
 
-    bounce() {
-        if (this.location.x > 925 - this.radius * 2 || this.location.x < 75 + this.radius * 2) {
-            this.velocity.x = this.velocity.x * -1
-            this.spinVelocity = this.spinVelocity * -1
-        }
-        if (this.location.y > 925 - this.radius * 2 || this.location.y < 75 + this.radius * 2) {
-            this.velocity.y = this.velocity.y * -1
-            this.spinVelocity = this.spinVelocity * -1
-        }
-    }
+    // bounce() {
+    //     if (this.location.x > 925 - this.radius * 2 || this.location.x < 75 + this.radius * 2) {
+    //         this.velocity.x = this.velocity.x * -1
+    //         this.spinVelocity = this.spinVelocity * -1
+    //     }
+    //     if (this.location.y > 925 - this.radius * 2 || this.location.y < 75 + this.radius * 2) {
+    //         this.velocity.y = this.velocity.y * -1
+    //         this.spinVelocity = this.spinVelocity * -1
+    //     }
+    // }
 }
 
 class SphereGroup {
@@ -143,6 +154,9 @@ class SphereGroup {
         this.spheres = [];
         this.blackhole = new BlackHole();
         this.circular = document.getElementById('circular');
+        this.xFunc = circleFunctions[document.getElementById('x-function').value]; //These are
+        this.yFunc = circleFunctions[document.getElementById('y-function').value]; //all functions
+        this.zFunc = circleFunctions[document.getElementById('z-function').value]; //Math.sin, Math.cos, or Math.tan
     }
     
     addSphere(sphere) {
@@ -152,7 +166,7 @@ class SphereGroup {
 
     addSpheres(numberToAdd) {
         for (let i=0; i < numberToAdd; i++) {
-            let newSphere = new Sphere(Math.floor(Math.random() * 1000) - 500, Math.floor(Math.random() * 1000) - 500);
+            let newSphere = new Sphere(Math.floor(Math.random() * 1000) - 500, Math.floor(Math.random() * 1000) - 500, Math.floor(Math.random() * 1000) - 500);
             this.spheres.push(newSphere)
         }
         for (let i = 0; i < this.spheres.length; i++) {
@@ -162,22 +176,22 @@ class SphereGroup {
         }
     }
 
-    setBlackholeFormation() {
+    setBlackholeFormation(numberToAdd) {
         this.blackhole.neighbors = this.spheres;
+        this.blackhole.neighbors.forEach(neighbor => neighbor.bounce = () => {})
     }
     
     run() {
         this.spheres.forEach(sphere => {
-            if (this.circular.checked) sphere.spin(mouseX, mouseY);
+            if (this.circular.checked) sphere.spin(mouseX, mouseY, 0, this.xFunc, this.yFunc, this.zFunc);
             else sphere.move();
         })
     }
 
     runBlackHoleFormation() {
         this.spheres.forEach(sphere => {
-            sphere.spin(this.blackhole.location.x, this.blackhole.location.y)
+            sphere.spin(this.blackhole.location.x, this.blackhole.location.y, 0, this.xFunc, this.yFunc, this.zFunc)
         })
-
         this.blackhole.move();
     }
 

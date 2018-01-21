@@ -18,7 +18,7 @@
     <script defer src="/scripts/sketch.js"></script>
 </head>
 
-<body className="container">
+<body class="container">
     <!-- <div id="app"></div> -->
     <!-- <div className="ui slider checkbox">
         <input type="checkbox" name="circle">
@@ -28,6 +28,34 @@
         <div class="ui toggle checkbox">
             <input id="circular" type="checkbox" name="circular">
             <label>circular motion</label>
+        </div>
+        <div class="nav-function">
+            <label>x function: </label>
+            <select id="x-function" class="ui compact selection dropdown">
+                <option class="item" data-value="sin" selected="selected">sin</option>
+                <option class="item" data-value="cos">cos</option>
+                <option class="item" data-value="tan">tan</option>
+            </select>
+        </div>
+        <div class="nav-function">
+            <label>y function: </label>
+            <select id="y-function" class="ui compact selection dropdown">
+                <option class="item" data-value="sin">sin</option>
+                <option class="item" data-value="cos" selected="selected">cos</option>
+                <option class="item" data-value="tan">tan</option>
+            </select>
+        </div>
+        <div class="nav-function">
+            <label>z function: </label>
+            <select id="z-function" class="ui compact selection dropdown">
+                <option class="item" data-value="sin">sin</option>
+                <option class="item" data-value="cos" selected="selected">cos</option>
+                <option class="item" data-value="tan">tan</option>
+            </select>
+        </div>
+        <div class="nav-function">
+            <input placeholder="number of particles">
+            <button>Start</button>
         </div>
     </nav>
 

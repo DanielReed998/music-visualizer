@@ -1,8 +1,12 @@
-var group = new SphereGroup();
+var group;
 // var ball = new Sphere(0,0);
 var particle = new Particle(1,1);
 var system = new ParticleSystem()
 var song;
+
+var functionTogglers = document.getElementsByClassName('ui selection dropdown');
+console.log(functionTogglers);
+[].slice.apply(functionTogglers).forEach(toggler => toggler.addEventListener('change', () => {setup()}))
 
 function preload() {
 	soundFormats('mp3', 'ogg');
@@ -10,10 +14,12 @@ function preload() {
   }
 
 function setup() {
+	console.log('setup');
 	createCanvas(1000, 1000, WEBGL);
 	// noStroke();
-	group.addSpheres(1);
-	// group.setBlackholeFormation();
+	group = new SphereGroup();
+	group.addSpheres(30);
+	group.setBlackholeFormation();
 	// group.collisionTest();
 	// system.addParticles(30);
 	// background(0);
@@ -31,10 +37,10 @@ function draw() {
 	// stroke(255)
 	// line(0,0,0,5,5,5)
 	// system.run();
-	group.run(3);
-	// group.runBlackHoleFormation();
-	fill(255)
-	pointLight(250, 250, 250, 0, 0, 1000);
+	// group.run(3);
+	group.runBlackHoleFormation();
+	// fill(255)
+	// pointLight(250, 250, 250, 0, 0, 1000);
 }
 
 function keyTyped() {
