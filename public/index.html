@@ -5,17 +5,32 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width initial-scale=1.0'>
     <title>Music-Viz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css">
     <link rel="stylesheet" href="/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/addons/p5.sound.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/addons/p5.dom.js"></script>
+
     <!-- <script defer src="/bundle.js"></script> -->
     <script defer src="/scripts/sphere.js"></script>
+    <script defer src="/scripts/music.js"></script>
+    <script defer src="/scripts/particle.js"></script>
     <script defer src="/scripts/sketch.js"></script>
 </head>
 
-<body>
+<body className="container">
     <!-- <div id="app"></div> -->
+    <!-- <div className="ui slider checkbox">
+        <input type="checkbox" name="circle">
+        <label>circle motion</label>
+    </div> -->
+    <nav>
+        <div class="ui toggle checkbox">
+            <input id="circular" type="checkbox" name="circular">
+            <label>circular motion</label>
+        </div>
+    </nav>
+
 </body>
 
 </html>
