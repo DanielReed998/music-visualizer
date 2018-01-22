@@ -16,9 +16,10 @@ class Sphere {
         this.distanceY = Math.random() * 250 + 75
         this.distanceZ = Math.random() * 250 + 75
         
-        this.radius = 5 + Math.random()*10;
+        this.radius = 10
+        // this.radius = 5 + Math.random()*10;
         this.lastMouse = {x: this.location.x, y: this.location.y};
-        this.color = [0, Math.random() * 150 + 155, Math.random() * 50 + 205]
+        this.color = [Math.random() * 150 + 155, 0, Math.random() * 50 + 205]
         // this.color = 50
         this.colorShift = 50
         this.colorDirection = 1;
@@ -84,7 +85,7 @@ class Sphere {
             this.velocity.y = this.velocity.y * -1
             this.spinVelocity = this.spinVelocity * -1
         }
-        if (this.location.z > 250 - this.radius * 2 || this.location.z < 1000 + this.radius * 2) {
+        if (this.location.z > 326 - this.radius * 2 || this.location.z < -1000 + this.radius * 2) {
             this.velocity.z = this.velocity.z * -1
             this.spinVelocity = this.spinVelocity * -1
         }
@@ -110,14 +111,11 @@ class Sphere {
 
     }
 
-    display() {
-        // this.rope.update(Math.sqrt(Math.pow(this.location.x-mouseX, 2) + Math.pow(this.location.y-mouseY, 2)));
-    
+    display() {        
+        translate(this.location.x - 500, this.location.y - 500, this.location.z)
         fill(this.color);
         pointLight(250, 250, 250, 0, 0, 1000);
-        // pointLight(250, 250, 250, mouseX-500, mouseY-500, 0);
-        translate(this.location.x - 500, this.location.y - 500, this.location.z)
-        sphere(this.radius);
+        sphere(this.radius);   
         translate(-(this.location.x - 500), -(this.location.y - 500), -this.location.z)
     }
 }
@@ -127,7 +125,7 @@ class BlackHole extends Sphere {
         super(0, 0, 0);
         this.velocity = new p5.Vector(Math.random() * 1 - 0.5, Math.random() * 1 - 0.5, 0);
         this.radius = 50;
-        this.color = 25;
+        this.color = [255, 150, 0];
     }
 
     move() {
@@ -135,6 +133,14 @@ class BlackHole extends Sphere {
         this.bounce();
         this.collide();
         this.display();
+    }
+
+    display() {
+        translate(this.location.x - 500, this.location.y - 500, this.location.z)
+        fill(this.color);
+        pointLight(250, 250, 250, 0, 0, 1000);
+        sphere(this.radius, 60, 60);   
+        translate(-(this.location.x - 500), -(this.location.y - 500), -this.location.z)
     }
 
     // bounce() {
@@ -157,6 +163,12 @@ class SphereGroup {
         this.xFunc = circleFunctions[document.getElementById('x-function').value]; //These are
         this.yFunc = circleFunctions[document.getElementById('y-function').value]; //all functions
         this.zFunc = circleFunctions[document.getElementById('z-function').value]; //Math.sin, Math.cos, or Math.tan
+    }
+
+    updateCircleFunctions() {
+        this.xFunc = circleFunctions[document.getElementById('x-function').value]; //These are
+        this.yFunc = circleFunctions[document.getElementById('y-function').value]; //all functions
+        this.zFunc = circleFunctions[document.getElementById('z-function').value];
     }
     
     addSphere(sphere) {

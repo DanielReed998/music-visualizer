@@ -1,25 +1,28 @@
 var group;
-// var ball = new Sphere(0,0);
+var ball = new Sphere(0,0,0,Math.random(),Math.random(),Math.random());
 var particle = new Particle(1,1);
 var system = new ParticleSystem()
+var img;
 var song;
+var texture;
 
 var functionTogglers = document.getElementsByClassName('ui selection dropdown');
 console.log(functionTogglers);
-[].slice.apply(functionTogglers).forEach(toggler => toggler.addEventListener('change', () => {setup()}))
+[].slice.apply(functionTogglers).forEach(toggler => toggler.addEventListener('change', () => {group.updateCircleFunctions()}))
 
 function preload() {
 	soundFormats('mp3', 'ogg');
 	song = loadSound('Silver-Rocket.mp3');
+	img = loadImage('sky-lights-space-dark.jpg')
   }
 
 function setup() {
 	console.log('setup');
 	createCanvas(1000, 1000, WEBGL);
-	// noStroke();
 	group = new SphereGroup();
-	group.addSpheres(30);
+	group.addSpheres(15);
 	group.setBlackholeFormation();
+
 	// group.collisionTest();
 	// system.addParticles(30);
 	// background(0);
@@ -30,17 +33,12 @@ function setup() {
 	// song = loadSound('/public/scripts/audio/Silver-Rocket.mp3')
 
 function draw() {
+
 	noStroke();
-	background(50);
-	// ball.move()
-	// ball.display();
-	// stroke(255)
-	// line(0,0,0,5,5,5)
-	// system.run();
-	// group.run(3);
+	background(0);
 	group.runBlackHoleFormation();
 	// fill(255)
-	// pointLight(250, 250, 250, 0, 0, 1000);
+	
 }
 
 function keyTyped() {
