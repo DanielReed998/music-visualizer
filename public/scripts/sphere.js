@@ -1,4 +1,5 @@
 
+
 const circleFunctions = {
     cos: value => Math.cos(value),
     sin: value => Math.sin(value),
@@ -7,7 +8,7 @@ const circleFunctions = {
 
 class Sphere {
 	constructor(x, y, z, xVelocity, yVelocity, zVelocity) {
-        this.location = new p5.Vector(x+500,y+500, z)
+        this.location = new p5.Vector(x + width / 2,y + height / 2, z)
         // this.velocity = new p5.Vector(xVelocity, yVelocity);
         this.velocity = new p5.Vector(Math.random() * 6 - 3, Math.random() * 6 - 3, Math.random() * 6 - 3)
         this.spinVelocity = Math.random() * 0.05
@@ -16,10 +17,10 @@ class Sphere {
         this.distanceY = Math.random() * 250 + 75
         this.distanceZ = Math.random() * 250 + 75
         
-        this.radius = 10
+        this.radius = 7
         // this.radius = 5 + Math.random()*10;
         this.lastMouse = {x: this.location.x, y: this.location.y};
-        this.color = [Math.random() * 150 + 155, 0, Math.random() * 50 + 205]
+        this.color = [0, Math.random() * 150 + 155, Math.random() * 50 + 205]
         // this.color = 50
         this.colorShift = 50
         this.colorDirection = 1;
@@ -30,7 +31,11 @@ class Sphere {
     }
 
     move() {
-        this.location = this.location.add(this.velocity);
+        var extraSpeed = 1;
+        if (mouseIsPressed) extraSpeed = 2;
+
+        this.location = this.location.add(new p5.Vector(this.velocity.x*extraSpeed, this.velocity.y*extraSpeed, this.velocity.z*extraSpeed));
+
         this.pulse()
         this.bounce();
         this.collide();
@@ -41,8 +46,8 @@ class Sphere {
 
         //click event to boost the speed
         var extraSpeed = 0;
-        // if (mouseIsPressed) extraSpeed = 0.05 * Math.sign(this.spinVelocity);
-        // else extraSpeed = 0;
+        if (mouseIsPressed) extraSpeed = 0.05 * Math.sign(this.spinVelocity);
+        else extraSpeed = 0;
         
         //create motion
         this.radians += this.spinVelocity + extraSpeed;
@@ -53,16 +58,14 @@ class Sphere {
         this.location.z = centerZ + zFunc(this.radians) * this.distanceZ;
         this.pulse();
         
-        //add ropes
-        // this.rope = new Rope(mouseX, mouseY, this.location.x, this.location.y, 20)
         this.bounce();
         this.collide();
         this.display();
     }
     
     pulse() {
-        if (this.colorShift >= 50) this.colorDirection = -2
-        if (this.colorShift <= 0) this.colorDirection = 2;
+        if (this.colorShift >= 100) this.colorDirection = -3
+        if (this.colorShift <= 0) this.colorDirection = 3;
         
         this.colorShift = this.colorShift + this.colorDirection
         for (let i = 0; i < 3; i++) {
@@ -73,15 +76,14 @@ class Sphere {
                 this.color[i] += this.colorDirection;
             }
         }
-        // console.log(this.color);
     }
 
     bounce() {
-        if (this.location.x > 1000 - this.radius * 2 || this.location.x < 0 + this.radius * 2) {
+        if (this.location.x > width - this.radius * 2 || this.location.x < 0 + this.radius * 2) {
             this.velocity.x = this.velocity.x * -1
             this.spinVelocity = this.spinVelocity * -1
         }
-        if (this.location.y > 1000 - this.radius * 2 || this.location.y < 0 + this.radius * 2) {
+        if (this.location.y > height - this.radius * 2 || this.location.y < 0 + this.radius * 2) {
             this.velocity.y = this.velocity.y * -1
             this.spinVelocity = this.spinVelocity * -1
         }
@@ -112,20 +114,31 @@ class Sphere {
     }
 
     display() {        
-        translate(this.location.x - 500, this.location.y - 500, this.location.z)
+        translate(this.location.x - width / 2, this.location.y - height / 2, this.location.z)
         fill(this.color);
         pointLight(250, 250, 250, 0, 0, 1000);
         sphere(this.radius);   
-        translate(-(this.location.x - 500), -(this.location.y - 500), -this.location.z)
+        translate(-(this.location.x - width / 2), -(this.location.y - height / 2), -this.location.z)
     }
 }
 
 class BlackHole extends Sphere {
     constructor() {
         super(0, 0, 0);
-        this.velocity = new p5.Vector(Math.random() * 1 - 0.5, Math.random() * 1 - 0.5, 0);
+        this.velocity = new p5.Vector(Math.random() * 1 - 0.5, Math.random() * 1 - 0.5, Math.random() * 1 - 0.5);
         this.radius = 50;
-        this.color = [255, 150, 0];
+        this.color = 150;
+        this.isPaused = false;
+    }
+
+    paused() {
+        if (this.isPaused) {
+            this.velocity = new p5.Vector(Math.random() * 1 - 0.5, Math.random() * 1 - 0.5, Math.random() * 1 - 0.5);
+            this.isPaused = false
+        } else {
+            this.velocity = new p5.Vector(0, 0, 0)
+            this.isPaused = true;
+        }
     }
 
     move() {
@@ -135,24 +148,28 @@ class BlackHole extends Sphere {
         this.display();
     }
 
-    display() {
-        translate(this.location.x - 500, this.location.y - 500, this.location.z)
+    display() {        
+        translate(this.location.x - width / 2, this.location.y - height / 2, this.location.z)
         fill(this.color);
         pointLight(250, 250, 250, 0, 0, 1000);
         sphere(this.radius, 60, 60);   
-        translate(-(this.location.x - 500), -(this.location.y - 500), -this.location.z)
+        translate(-(this.location.x - width / 2), -(this.location.y - height / 2), -this.location.z)
     }
 
-    // bounce() {
-    //     if (this.location.x > 925 - this.radius * 2 || this.location.x < 75 + this.radius * 2) {
-    //         this.velocity.x = this.velocity.x * -1
-    //         this.spinVelocity = this.spinVelocity * -1
-    //     }
-    //     if (this.location.y > 925 - this.radius * 2 || this.location.y < 75 + this.radius * 2) {
-    //         this.velocity.y = this.velocity.y * -1
-    //         this.spinVelocity = this.spinVelocity * -1
-    //     }
-    // }
+    bounce() {
+        if (this.location.x > 925 - this.radius * 2 || this.location.x < 75 + this.radius * 2) {
+            this.velocity.x = this.velocity.x * -1
+            this.spinVelocity = this.spinVelocity * -1
+        }
+        if (this.location.y > 925 - this.radius * 2 || this.location.y < 75 + this.radius * 2) {
+            this.velocity.y = this.velocity.y * -1
+            this.spinVelocity = this.spinVelocity * -1
+        }
+        if (this.location.z > 300 - this.radius * 2 || this.location.z < -1000 + this.radius * 2) {
+            this.velocity.z = this.velocity.z * -1
+            this.spinVelocity = this.spinVelocity * -1
+        }
+    }
 }
 
 class SphereGroup {
@@ -188,7 +205,11 @@ class SphereGroup {
         }
     }
 
-    setBlackholeFormation(numberToAdd) {
+    subtractSphere() {
+        this.spheres = this.spheres.slice(0, -1)
+    }
+
+    setBlackholeFormation() {
         this.blackhole.neighbors = this.spheres;
         this.blackhole.neighbors.forEach(neighbor => neighbor.bounce = () => {})
     }
@@ -202,7 +223,7 @@ class SphereGroup {
 
     runBlackHoleFormation() {
         this.spheres.forEach(sphere => {
-            sphere.spin(this.blackhole.location.x, this.blackhole.location.y, 0, this.xFunc, this.yFunc, this.zFunc)
+            sphere.spin(this.blackhole.location.x, this.blackhole.location.y, this.blackhole.location.z, this.xFunc, this.yFunc, this.zFunc)
         })
         this.blackhole.move();
     }

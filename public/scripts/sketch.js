@@ -1,10 +1,16 @@
 var group;
-var ball = new Sphere(0,0,0,Math.random(),Math.random(),Math.random());
+// var ball = new Sphere(0,0,0,Math.random(),Math.random(),Math.random());
 var particle = new Particle(1,1);
 var system = new ParticleSystem()
 var img;
 var song;
-var texture;
+
+var addButton = document.getElementById('add-spheres-btn');
+addButton.addEventListener('click', () => {
+	let count = +document.getElementById('add-spheres-input').value;
+	group.addSpheres(count);
+	group.setBlackholeFormation();
+})
 
 var functionTogglers = document.getElementsByClassName('ui selection dropdown');
 console.log(functionTogglers);
@@ -17,37 +23,51 @@ function preload() {
   }
 
 function setup() {
-	console.log('setup');
-	createCanvas(1000, 1000, WEBGL);
+	createCanvas(window.innerWidth, window.innerHeight - 75, WEBGL);
 	group = new SphereGroup();
-	group.addSpheres(15);
+	group.addSpheres(50);
 	group.setBlackholeFormation();
-
 	// group.collisionTest();
 	// system.addParticles(30);
 	// background(0);
 	// frameRate(120)
 	// song.play();
-	
 }
-	// song = loadSound('/public/scripts/audio/Silver-Rocket.mp3')
 
 function draw() {
 
 	noStroke();
 	background(0);
+
 	group.runBlackHoleFormation();
-	// fill(255)
+	// group.run();
+
+	if (keyIsDown(LEFT_ARROW))	group.blackhole.location.x += -5;
+	if (keyIsDown(RIGHT_ARROW))	group.blackhole.location.x += 5;
+	if (keyIsDown(UP_ARROW))	group.blackhole.location.y += -5;
+	if (keyIsDown(DOWN_ARROW))	group.blackhole.location.y += 5;
+	if (keyIsDown(190))			group.blackhole.location.z += 5;
+	if (keyIsDown(188))			group.blackhole.location.z += -5;
 	
 }
 
 function keyTyped() {
-	if (key === 'a'){
-		let ball = new Sphere(mouseX - 500, mouseY - 500, Math.random() * 6 - 3, Math.random() * 6 - 3);
-		group.addSphere(ball);
-	}
-	if (key === 'c') {
-		document.getElementById('circular').checked = !document.getElementById('circular').checked
+	switch (key){
+		case 'a':
+			let ball = new Sphere(mouseX - 500, mouseY - 500, Math.random() * 6 - 3, Math.random() * 6 - 3);
+			ball.bounce = () => {};
+			group.addSphere(ball);
+			break;
+		case 's':
+			group.subtractSphere();
+		case 'c':
+			document.getElementById('circular').checked = !document.getElementById('circular').checked
+			break;
+		case ' ':
+			group.blackhole.paused();
+			break;
+		default:
+			break;
 	}
 }
 
