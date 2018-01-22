@@ -1,5 +1,19 @@
 
 
+
+const anchorColor = document.getElementById('anchor-color')
+const orbitColor = document.getElementById('orbiter-color')
+
+const colors = {
+    blueish: [0, Math.random() * 150 + 155, Math.random() * 50 + 205],
+    yellowish: [Math.random() * 50 + 205, Math.random() * 120 + 185, 0],
+    reddish: [Math.random() * 30 + 225, 0, Math.random() * 100 + 100],
+    greenish: [0, Math.random() * 30 + 225, Math.random() * 100 + 100],
+    purpleish: [Math.random() * 50 + 205, 0, Math.random() * 150 + 155],
+    whiteish: 175
+}
+
+console.log(anchorColor.value)
 const circleFunctions = {
     cos: value => Math.cos(value),
     sin: value => Math.sin(value),
@@ -115,7 +129,7 @@ class Sphere {
 
     display() {        
         translate(this.location.x - width / 2, this.location.y - height / 2, this.location.z)
-        fill(this.color);
+        fill(colors[orbitColor.value]);
         pointLight(250, 250, 250, 0, 0, 1000);
         sphere(this.radius);   
         translate(-(this.location.x - width / 2), -(this.location.y - height / 2), -this.location.z)
@@ -150,7 +164,7 @@ class BlackHole extends Sphere {
 
     display() {        
         translate(this.location.x - width / 2, this.location.y - height / 2, this.location.z)
-        fill(this.color);
+        fill(colors[anchorColor.value]);
         pointLight(250, 250, 250, 0, 0, 1000);
         sphere(this.radius, 60, 60);   
         translate(-(this.location.x - width / 2), -(this.location.y - height / 2), -this.location.z)

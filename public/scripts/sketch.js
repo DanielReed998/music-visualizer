@@ -4,29 +4,34 @@ var particle = new Particle(1,1);
 var system = new ParticleSystem()
 var img;
 var song;
+var anchor = document.getElementById('anchor');
+var anchorChecked = false
+anchor.addEventListener('change', ()=> {
+	anchorChecked = !anchorChecked;
+	if (anchorChecked) group.setBlackholeFormation();
+})
 
 var addButton = document.getElementById('add-spheres-btn');
 addButton.addEventListener('click', () => {
 	let count = +document.getElementById('add-spheres-input').value;
 	group.addSpheres(count);
-	group.setBlackholeFormation();
+	if (anchorChecked) group.setBlackholeFormation();
 })
 
 var functionTogglers = document.getElementsByClassName('ui selection dropdown');
-console.log(functionTogglers);
 [].slice.apply(functionTogglers).forEach(toggler => toggler.addEventListener('change', () => {group.updateCircleFunctions()}))
 
 function preload() {
 	soundFormats('mp3', 'ogg');
-	song = loadSound('Silver-Rocket.mp3');
-	img = loadImage('sky-lights-space-dark.jpg')
+	// song = loadSound('Silver-Rocket.mp3');
+	// img = loadImage('sky-lights-space-dark.jpg')
   }
 
 function setup() {
 	createCanvas(window.innerWidth, window.innerHeight - 75, WEBGL);
 	group = new SphereGroup();
 	group.addSpheres(50);
-	group.setBlackholeFormation();
+	if (anchorChecked) group.setBlackholeFormation();
 	// group.collisionTest();
 	// system.addParticles(30);
 	// background(0);
@@ -39,9 +44,13 @@ function draw() {
 	noStroke();
 	background(0);
 
-	group.runBlackHoleFormation();
-	// group.run();
+	if (anchorChecked) {
+		group.runBlackHoleFormation();
+	}
+	else group.run();
 
+
+	// controls movement of center sphere
 	if (keyIsDown(LEFT_ARROW))	group.blackhole.location.x += -5;
 	if (keyIsDown(RIGHT_ARROW))	group.blackhole.location.x += 5;
 	if (keyIsDown(UP_ARROW))	group.blackhole.location.y += -5;
@@ -60,10 +69,11 @@ function keyTyped() {
 			break;
 		case 's':
 			group.subtractSphere();
+			break;
 		case 'c':
 			document.getElementById('circular').checked = !document.getElementById('circular').checked
 			break;
-		case ' ':
+		case 'p':
 			group.blackhole.paused();
 			break;
 		default:
