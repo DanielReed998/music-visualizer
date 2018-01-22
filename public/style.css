@@ -23,3 +23,22 @@ form div {
 .nav {
     position: fixed;
 }
+
+nav {
+    display: flex;
+}
+
+div.ui.toggle.checkbox {
+    margin-right: 50px;
+    justify-content: center;
+}
+
+.nav-function {
+    margin-left: 20px;
+}
+
+#checkboxes,
+#add-spheres {
+    height: 20px;
+    align-self: center;
+}
